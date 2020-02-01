@@ -2,6 +2,8 @@
 
 
 #include "TowerPawn.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ATowerPawn::ATowerPawn()
@@ -30,6 +32,8 @@ ATowerPawn::ATowerPawn()
 void ATowerPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Collision->OnComponentBeginOverlap.AddDynamic(this, &ATowerPawn::HeroEnters);
 	
 }
 
@@ -37,6 +41,12 @@ void ATowerPawn::BeginPlay()
 void ATowerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	sineInput += DeltaTime * 3;
+
+	HeroMesh->SetRelativeLocation(FVector(
+		0.f, 0.f,
+		UKismetMathLibrary::Lerp(-4.f, 4.f, UKismetMathLibrary::Sin(sineInput))));
 
 }
 
@@ -52,10 +62,19 @@ void ATowerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 void ATowerPawn::MoveUpDown(float AxisValue)
 {
 	UE_LOG(LogTemp, Warning, TEXT("MoveUpDownCalled"))
-	HeroMesh->SetRelativeLocation(HeroMesh->GetRelativeLocation() + FVector(0, 0, AxisValue *15));
+	SpringArm->SetRelativeLocation(SpringArm->GetRelativeLocation() + FVector(0, 0, AxisValue * 15));
 }
 
 void ATowerPawn::RotateAroundTower(float AxisValue)
 {
 	SpringArm->SetRelativeRotation(SpringArm->GetRelativeRotation() + FRotator(0, -AxisValue * 3, 0));
+}
+
+void ATowerPawn::HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	OtherActor->SetActorLocation(OtherActor->GetActorLocation() + (OtherActor->GetActorForwardVector() * -50));
+
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(this);
+	HeroMesh->SetHiddenInGame(false);
 }

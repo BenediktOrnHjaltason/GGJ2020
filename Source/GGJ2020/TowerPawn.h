@@ -40,6 +40,17 @@ public:
 	void RotateAroundTower(float AxisValue);
 	void MoveUpDown(float AxisValue);
 
+	//------Up&Down Movement
+	float sineInput{ 0 };
+
+	//-----/
+
+	//------Overlap
+
+	UFUNCTION()
+		void HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,3 +63,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
+
+
+/* TODO:
+
+Switch to tower when overlapping
+
+*/

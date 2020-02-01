@@ -52,6 +52,9 @@ Plugins/*/Binaries/*
 # Builds
 Build/*
 
+# Animation starter pack
+Content/AnimStarterPack
+
 # Whitelist PakBlacklist-<BuildConfiguration>.txt files
 !Build/*/
 Build/*/**

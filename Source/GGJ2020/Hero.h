@@ -27,6 +27,11 @@ public:
 	void MoveRightLeft(float AxisValue);
 	void RotatePlayer(float AxisValue);
 
+
+
+	class ATowerPawn* TowerPawnRef;
+	void GetTowerPawnRef();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

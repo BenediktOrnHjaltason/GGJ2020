@@ -2,6 +2,8 @@
 
 
 #include "Hero.h"
+#include "TowerPawn.h"
+#include "EngineUtils.h"
 
 // Sets default values
 AHero::AHero()
@@ -21,7 +23,7 @@ AHero::AHero()
 void AHero::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetTowerPawnRef();
 }
 
 // Called every frame
@@ -49,5 +51,15 @@ void AHero::MoveRightLeft(float AxisValue) {
 }
 void AHero::RotatePlayer(float AxisValue) {
 	AddControllerYawInput(AxisValue);
+}
+
+void AHero::GetTowerPawnRef()
+{
+	for (TActorIterator<ATowerPawn> TowerPawnIt(GetWorld()); TowerPawnIt; ++TowerPawnIt)
+	{
+		ATowerPawn* TowerPawn = *TowerPawnIt;
+
+		TowerPawnRef = TowerPawn;
+	}
 }
 

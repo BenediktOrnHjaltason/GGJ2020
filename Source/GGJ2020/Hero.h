@@ -24,7 +24,10 @@ public:
 		UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int CollectedBlocks{ 0 };
+		int CollectedBlocks{ 4 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int PieceIndexToSpawn{ 0 };
 
 	void ForwardBackward(float AxisValue);
 	void MoveRightLeft(float AxisValue);
@@ -34,6 +37,9 @@ public:
 
 	class ATowerPawn* TowerPawnRef;
 	void GetTowerPawnRef();
+
+	UFUNCTION(BlueprintCallable)
+		int detectShape(bool p0, bool p1, bool p2, bool p3, bool p4, bool p5);
 
 protected:
 	// Called when the game starts or when spawned

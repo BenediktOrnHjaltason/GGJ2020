@@ -30,6 +30,8 @@ ATowerPawn::ATowerPawn()
 	HeroPlacer = CreateDefaultSubobject<USceneComponent>(TEXT("HeroPlacement"));
 	HeroPlacer->SetupAttachment(SpringArm);
 
+	JetPackAudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("JetpackAudio"));
+
 }
 
 // Called when the game starts or when spawned
@@ -62,6 +64,9 @@ void ATowerPawn::Tick(float DeltaTime)
 		HeroRef->SetActorHiddenInGame(false);
 		UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(HeroRef);
 		SpringArm->SetRelativeLocation(FVector(SpringArm->GetRelativeLocation().X, SpringArm->GetRelativeLocation().Y, -480));
+
+		ToggleEnableCameraLag(false);
+		JetPackAudioComp->SetVolumeMultiplier(0.f);
 	}
 }
 
@@ -98,8 +103,10 @@ void ATowerPawn::HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 	FVector TowerToPlayer = OtherActor->GetActorLocation() - GetActorLocation();
 
 	SpringArm->SetRelativeRotation(FRotator(SpringArm->GetRelativeRotation().Pitch,TowerToPlayer.Rotation().Yaw + 180, SpringArm->GetRelativeRotation().Roll));
+	ToggleEnableCameraLag(true);
 
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(this);
 	HeroMesh->SetHiddenInGame(false);
 	HeroRef->SetActorHiddenInGame(true);
+	JetPackAudioComp->SetVolumeMultiplier(1.f);
 }

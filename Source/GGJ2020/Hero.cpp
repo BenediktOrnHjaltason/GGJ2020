@@ -64,3 +64,23 @@ void AHero::GetTowerPawnRef()
 	}
 }
 
+int AHero::detectShape(bool p0, bool p1, bool p2, bool p3, bool p4, bool p5)
+{
+	if (p0 == true && p1 == false && p2 == false && p3 == true && p4 == true && p5 == true) return 0;
+	if (p0 == false && p1 == false && p2 == true && p3 == true && p4 == true && p5 == true) return 1;
+
+	if ((p0 == true && p1 == true && p2 == false && p3 == true && p4 == true && p5 == false) ||
+		(p0 == false && p1 == true && p2 == true && p3 == false && p4 == true && p5 == true))
+	{
+		if (p0 == true && p1 == true && p2 == false && p3 == true && p4 == true && p5 == false)	return 9;
+		if (p0 == false && p1 == true && p2 == true && p3 == false && p4 == true && p5 == true) return 10;
+
+	}
+
+
+	if (p0 == false && p1 == true && p2 == true && p3 == true && p4 == true && p5 == false) return 3;
+	if (p0 == false && p1 == true && p2 == false && p3 == true && p4 == true && p5 == true) return 4;
+	if (p0 == true && p1 == true && p2 == false && p3 == false && p4 == true && p5 == true) return 5;
+
+	else return 6;
+}

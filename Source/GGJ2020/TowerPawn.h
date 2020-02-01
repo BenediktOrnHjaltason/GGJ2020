@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SceneComponent.h"
 
 
@@ -26,7 +27,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		UCapsuleComponent* Collision;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USpringArmComponent* SpringArm;
 
 	UPROPERTY(EditAnywhere)
@@ -40,6 +41,12 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		USceneComponent* HeroPlacer;
+
+	UPROPERTY(VisibleAnywhere)
+		UAudioComponent* JetPackAudioComp;
+
+	UPROPERTY(VisibleAnywhere)
+	USoundBase* JetpackSound;
 
 	class AHero* HeroRef;
 
@@ -61,6 +68,9 @@ public:
 	UFUNCTION()
 		void HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void ToggleEnableCameraLag(bool OnOrOff);
 
 	FRotator LookDirection;
 

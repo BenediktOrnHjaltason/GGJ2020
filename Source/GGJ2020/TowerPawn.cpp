@@ -47,7 +47,6 @@ void ATowerPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	sineInput += DeltaTime * 5;
-
 	HeroMesh->SetRelativeLocation(FVector(
 		0.f, 0.f,
 		UKismetMathLibrary::Lerp(-5.f, 5.f, UKismetMathLibrary::Sin(sineInput))));
@@ -95,6 +94,10 @@ void ATowerPawn::HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	OtherActor->SetActorLocation(OtherActor->GetActorLocation() + (OtherActor->GetActorForwardVector() * -50));
+	
+	FVector TowerToPlayer = OtherActor->GetActorLocation() - GetActorLocation();
+
+	SpringArm->SetRelativeRotation(FRotator(SpringArm->GetRelativeRotation().Pitch,TowerToPlayer.Rotation().Yaw + 180, SpringArm->GetRelativeRotation().Roll));
 
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(this);
 	HeroMesh->SetHiddenInGame(false);

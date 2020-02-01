@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SceneComponent.h"
 
 
 #include "TowerPawn.generated.h"
@@ -37,11 +38,21 @@ public:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* TowerMesh;
 
+	UPROPERTY(EditAnyWhere)
+		USceneComponent* HeroPlacer;
+
+	class AHero* HeroRef;
+
+	FRotator HeroExitRotation;
+
 	void RotateAroundTower(float AxisValue);
 	void MoveUpDown(float AxisValue);
 
 	//------Up&Down Movement
 	float sineInput{ 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float fUpperLimit;
 
 	//-----/
 
@@ -50,6 +61,8 @@ public:
 	UFUNCTION()
 		void HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	FRotator LookDirection;
 
 protected:
 	// Called when the game starts or when spawned

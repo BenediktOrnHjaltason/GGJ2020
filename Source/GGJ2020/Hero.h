@@ -23,6 +23,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		UCameraComponent* Camera;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CollectedBlocks{ 0 };
+
 	void ForwardBackward(float AxisValue);
 	void MoveRightLeft(float AxisValue);
 	void RotatePlayer(float AxisValue);

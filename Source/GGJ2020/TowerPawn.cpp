@@ -3,6 +3,7 @@
 
 #include "TowerPawn.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Hero.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -26,6 +27,9 @@ ATowerPawn::ATowerPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(HeroMesh);
 
+	HeroPlacer = CreateDefaultSubobject<USceneComponent>(TEXT("HeroPlacement"));
+	HeroPlacer->SetupAttachment(SpringArm);
+
 }
 
 // Called when the game starts or when spawned
@@ -42,12 +46,24 @@ void ATowerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	sineInput += DeltaTime * 3;
+	sineInput += DeltaTime * 5;
 
 	HeroMesh->SetRelativeLocation(FVector(
 		0.f, 0.f,
-		UKismetMathLibrary::Lerp(-4.f, 4.f, UKismetMathLibrary::Sin(sineInput))));
+		UKismetMathLibrary::Lerp(-5.f, 5.f, UKismetMathLibrary::Sin(sineInput))));
 
+
+	if (SpringArm->GetRelativeLocation().Z < -490.f)
+	{
+		HeroMesh->SetHiddenInGame(true);
+		HeroRef->SetActorLocation(HeroPlacer->GetComponentLocation());
+		HeroRef->SetActorRotation(
+			FRotator(
+				HeroRef->GetActorRotation().Pitch, UKismetMathLibrary::FindLookAtRotation(HeroRef->GetActorLocation(), GetActorLocation()).Yaw, HeroRef->GetActorRotation().Roll));
+		HeroRef->SetActorHiddenInGame(false);
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(HeroRef);
+		SpringArm->SetRelativeLocation(FVector(SpringArm->GetRelativeLocation().X, SpringArm->GetRelativeLocation().Y, -480));
+	}
 }
 
 // Called to bind functionality to input
@@ -61,9 +77,14 @@ void ATowerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void ATowerPawn::MoveUpDown(float AxisValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("MoveUpDownCalled"))
-	SpringArm->SetRelativeLocation(SpringArm->GetRelativeLocation() + FVector(0, 0, AxisValue * 15));
+
+	float UpdateZ = {SpringArm->GetRelativeLocation().Z + AxisValue * 15};
+
+	SpringArm->SetRelativeLocation(FVector(SpringArm->GetRelativeLocation().X, SpringArm->GetRelativeLocation().Y, UpdateZ));
+
+	UE_LOG(LogTemp, Warning, TEXT("SpringArm Z is: %f"), SpringArm->GetRelativeLocation().Z )
 }
+
 
 void ATowerPawn::RotateAroundTower(float AxisValue)
 {
@@ -77,4 +98,5 @@ void ATowerPawn::HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(this);
 	HeroMesh->SetHiddenInGame(false);
+	HeroRef->SetActorHiddenInGame(true);
 }

@@ -60,6 +60,7 @@ void AHero::GetTowerPawnRef()
 		ATowerPawn* TowerPawn = *TowerPawnIt;
 
 		TowerPawnRef = TowerPawn;
+		TowerPawn->HeroRef = this;
 	}
 }
 

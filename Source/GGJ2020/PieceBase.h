@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
 #include "PieceBase.generated.h"
 
 UCLASS()
@@ -16,8 +17,13 @@ public:
 	// Sets default values for this actor's properties
 	APieceBase();
 
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* Mesh;
+	UPROPERTY(VisibleAnywhere)
+		UStaticMeshComponent* Mesh;
+
+	UPROPERTY(VisibleAnywhere)
+		UBoxComponent* BoxCollision;
+
+	
 
 protected:
 	// Called when the game starts or when spawned

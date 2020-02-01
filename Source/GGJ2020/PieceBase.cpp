@@ -9,9 +9,11 @@ APieceBase::APieceBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	RootComponent = Mesh;
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
+	RootComponent = BoxCollision;
 
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(BoxCollision);
 }
 
 // Called when the game starts or when spawned

@@ -17,6 +17,27 @@ AHero::AHero()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
+	MeshHolding0 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold0"));
+	MeshHolding0->SetupAttachment(RootComponent);
+
+	MeshHolding1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold1"));
+	MeshHolding1->SetupAttachment(RootComponent);
+
+	MeshHolding2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold2"));
+	MeshHolding2->SetupAttachment(RootComponent);
+
+	MeshHolding3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold3"));
+	MeshHolding3->SetupAttachment(RootComponent);
+
+	MeshHolding4 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold4"));
+	MeshHolding4->SetupAttachment(RootComponent);
+
+	MeshHolding5 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold5"));
+	MeshHolding5->SetupAttachment(RootComponent);
+
+	PieceGrabber = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
+	PieceGrabber->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +45,19 @@ void AHero::BeginPlay()
 {
 	Super::BeginPlay();
 	GetTowerPawnRef();
+
+	PieceGrabber->OnComponentBeginOverlap.AddDynamic(this, &AHero::PiecesOverlap);
+
+	HoldingMeshes.Push(MeshHolding0);
+	HoldingMeshes.Push(MeshHolding1);
+	HoldingMeshes.Push(MeshHolding2);
+	HoldingMeshes.Push(MeshHolding3);
+	HoldingMeshes.Push(MeshHolding4);
+	HoldingMeshes.Push(MeshHolding5);
+
+	PieceGrabber->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
+	PieceGrabber->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
+
 }
 
 // Called every frame
@@ -40,6 +74,7 @@ void AHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("ForwardBackward", this, &AHero::ForwardBackward);
 	PlayerInputComponent->BindAxis("RightLeft", this, &AHero::MoveRightLeft);
 	PlayerInputComponent->BindAxis("Rotate", this, &AHero::RotatePlayer);
+	PlayerInputComponent->BindAction("PickUpDropDown", IE_Pressed, this, &AHero::PickupDropDown);
 
 }
 
@@ -83,4 +118,55 @@ int AHero::detectShape(bool p0, bool p1, bool p2, bool p3, bool p4, bool p5)
 	if (p0 == true && p1 == true && p2 == false && p3 == false && p4 == true && p5 == true) return 5;
 
 	else return 6;
+}
+
+void AHero::SpawnPiece(int index) {
+
+	if (index == 6) return;
+	
+	FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 5;
+
+	if (index == 0) GetWorld()->SpawnActor<APieceBase>(Piece0Spawn, SpawnLocation, GetActorRotation());
+	else if (index == 1) GetWorld()->SpawnActor<APieceBase>(Piece1Spawn, SpawnLocation, GetActorRotation());
+	else if (index == 2) GetWorld()->SpawnActor<APieceBase>(Piece2Spawn, SpawnLocation, GetActorRotation());
+	else if (index == 3) GetWorld()->SpawnActor<APieceBase>(Piece3Spawn, SpawnLocation, GetActorRotation());
+	else if (index == 4) GetWorld()->SpawnActor<APieceBase>(Piece4Spawn, SpawnLocation, GetActorRotation());
+	else if (index == 5) GetWorld()->SpawnActor<APieceBase>(Piece5Spawn, SpawnLocation, GetActorRotation());
+}
+
+void AHero::PiecesOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+
+	PieceGrabber->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
+
+	APieceBase* Piece = Cast<APieceBase>(OtherActor);
+
+	if(!bIsHoldingObject){
+		bIsHoldingObject = true;
+		if (Piece && HoldingMeshes.IsValidIndex(Piece->PieceIndex)) {
+			PieceHoldingNow = Piece->PieceIndex;
+		
+			HoldingMeshes[PieceHoldingNow]->SetHiddenInGame(false);
+			HoldingMeshes[PieceHoldingNow]->SetVisibility(true);
+
+			Piece->Destroy();
+		}
+	}
+}
+
+void AHero::PickupDropDown() {
+
+	if (!bIsHoldingObject)
+		PieceGrabber->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+
+	else {
+
+		HoldingMeshes[PieceHoldingNow]->SetHiddenInGame(true);
+		HoldingMeshes[PieceHoldingNow]->SetVisibility(false);
+
+		SpawnPiece(PieceHoldingNow);
+		PieceHoldingNow = 6;
+
+		bIsHoldingObject = false;
+	}
 }

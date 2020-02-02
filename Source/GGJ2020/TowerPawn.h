@@ -48,12 +48,36 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	USoundBase* JetpackSound;
 
+	//--Holding Pieces
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding0;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding1;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding2;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding3;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding4;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding5;
+
+	TArray<UStaticMeshComponent*> HoldingMeshes;
+
 	class AHero* HeroRef;
 
 	FRotator HeroExitRotation;
 
 	void RotateAroundTower(float AxisValue);
 	void MoveUpDown(float AxisValue);
+
+
 
 	//------Up&Down Movement
 	float sineInput{ 0 };

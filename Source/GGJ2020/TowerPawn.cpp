@@ -32,6 +32,24 @@ ATowerPawn::ATowerPawn()
 
 	JetPackAudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("JetpackAudio"));
 
+	MeshHolding0 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold0"));
+	MeshHolding0->SetupAttachment(HeroMesh);
+
+	MeshHolding1 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold1"));
+	MeshHolding1->SetupAttachment(HeroMesh);
+
+	MeshHolding2 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold2"));
+	MeshHolding2->SetupAttachment(HeroMesh);
+
+	MeshHolding3 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold3"));
+	MeshHolding3->SetupAttachment(HeroMesh);
+
+	MeshHolding4 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold4"));
+	MeshHolding4->SetupAttachment(HeroMesh);
+
+	MeshHolding5 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold5"));
+	MeshHolding5->SetupAttachment(HeroMesh);
+
 }
 
 // Called when the game starts or when spawned
@@ -40,6 +58,13 @@ void ATowerPawn::BeginPlay()
 	Super::BeginPlay();
 
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &ATowerPawn::HeroEnters);
+
+	HoldingMeshes.Push(MeshHolding0);
+	HoldingMeshes.Push(MeshHolding1);
+	HoldingMeshes.Push(MeshHolding2);
+	HoldingMeshes.Push(MeshHolding3);
+	HoldingMeshes.Push(MeshHolding4);
+	HoldingMeshes.Push(MeshHolding5);
 	
 }
 
@@ -67,6 +92,14 @@ void ATowerPawn::Tick(float DeltaTime)
 
 		ToggleEnableCameraLag(false);
 		JetPackAudioComp->SetVolumeMultiplier(0.f);
+
+		if (HeroRef && HeroRef->bIsHoldingObject) {
+			if(HoldingMeshes.IsValidIndex(HeroRef->PieceHoldingNow))
+			{ 
+				HoldingMeshes[HeroRef->PieceHoldingNow]->SetHiddenInGame(true);
+				HoldingMeshes[HeroRef->PieceHoldingNow]->SetVisibility(false);
+			}
+		}
 	}
 }
 
@@ -109,4 +142,10 @@ void ATowerPawn::HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 	HeroMesh->SetHiddenInGame(false);
 	HeroRef->SetActorHiddenInGame(true);
 	JetPackAudioComp->SetVolumeMultiplier(1.f);
+
+	if (HeroRef && HeroRef->bIsHoldingObject) {
+		HoldingMeshes[HeroRef->PieceHoldingNow]->SetHiddenInGame(false);
+		HoldingMeshes[HeroRef->PieceHoldingNow]->SetVisibility(true);
+	}
+
 }

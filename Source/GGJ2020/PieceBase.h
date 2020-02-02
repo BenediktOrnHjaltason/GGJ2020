@@ -23,6 +23,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UBoxComponent* BoxCollision;
 
+	UPROPERTY(EditAnywhere)
+		int PieceIndex{0};
+
 	
 
 protected:

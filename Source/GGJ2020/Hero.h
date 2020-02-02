@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "PieceBase.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Hero.generated.h"
 
 UCLASS()
@@ -29,17 +32,86 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int PieceIndexToSpawn{ 0 };
 
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding0;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding1;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding2;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding3;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding4;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshHolding5;
+
+	UPROPERTY(EditAnywhere)
+		USphereComponent* PieceGrabber;
+
+	UFUNCTION()
+		void PiecesOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+
+
+	TArray<UStaticMeshComponent*> HoldingMeshes;
+
+	
+
+
+	
 	void ForwardBackward(float AxisValue);
 	void MoveRightLeft(float AxisValue);
 	void RotatePlayer(float AxisValue);
 
 
 
+
 	class ATowerPawn* TowerPawnRef;
 	void GetTowerPawnRef();
 
+	UPROPERTY(EditAnyWhere)
+		TSubclassOf<APieceBase> Piece0Spawn;
+
+	UPROPERTY(EditAnyWhere)
+		TSubclassOf<APieceBase> Piece1Spawn;
+
+	UPROPERTY(EditAnyWhere)
+		TSubclassOf<APieceBase> Piece2Spawn;
+
+	UPROPERTY(EditAnyWhere)
+		TSubclassOf<APieceBase> Piece3Spawn;
+
+	UPROPERTY(EditAnyWhere)
+		TSubclassOf<APieceBase> Piece4Spawn;
+
+	UPROPERTY(EditAnyWhere)
+		TSubclassOf<APieceBase> Piece5Spawn;
+
+	UFUNCTION(BlueprintCallable)
+		void SpawnPiece(int index);
+
+
+
 	UFUNCTION(BlueprintCallable)
 		int detectShape(bool p0, bool p1, bool p2, bool p3, bool p4, bool p5);
+
+
+	//No 6 became default for NOTHING
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int PieceHoldingNow{ 6 };
+
+	bool bIsHoldingObject = false;
+
+	void PickupDropDown();
+		
+
+
 
 protected:
 	// Called when the game starts or when spawned

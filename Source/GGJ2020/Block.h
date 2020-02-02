@@ -16,7 +16,7 @@ public:
 	// Sets default values for this actor's properties
 	ABlock();
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere, Category = Sound)

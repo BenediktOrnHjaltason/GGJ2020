@@ -27,7 +27,7 @@ public:
 		UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int CollectedBlocks{ 4 };
+		int CollectedBlocks{ 16 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int PieceIndexToSpawn{ 0 };
@@ -113,7 +113,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PickupDropDown();
-		
+
+	void  IncrementCollectedBlocks();
+
+		UPROPERTY(EditAnywhere, Category = Sound)
+	USoundBase* CraftingSound;
 
 
 

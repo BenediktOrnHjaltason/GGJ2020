@@ -30,13 +30,16 @@ void ABlock::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	AddActorWorldRotation(FRotator(0, 50 * DeltaTime, 0));
+
 }
 
 void ABlock::PickUpOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
-	UE_LOG(LogTemp, Warning, TEXT("Pickup Overlap"))
+	
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	++HeroRef->CollectedBlocks;
+	HeroRef->IncrementCollectedBlocks();
 	this->Destroy();
 }
 

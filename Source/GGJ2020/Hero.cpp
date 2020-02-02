@@ -3,6 +3,7 @@
 
 #include "Hero.h"
 #include "TowerPawn.h"
+#include "Kismet/GameplayStatics.h"
 #include "EngineUtils.h"
 
 // Sets default values
@@ -132,6 +133,9 @@ void AHero::SpawnPiece(int index) {
 	else if (index == 3) GetWorld()->SpawnActor<APieceBase>(Piece3Spawn, SpawnLocation, GetActorRotation());
 	else if (index == 4) GetWorld()->SpawnActor<APieceBase>(Piece4Spawn, SpawnLocation, GetActorRotation());
 	else if (index == 5) GetWorld()->SpawnActor<APieceBase>(Piece5Spawn, SpawnLocation, GetActorRotation());
+
+
+	//UGameplayStatics::PlaySound2D(GetWorld(), CraftingSound);
 }
 
 void AHero::PiecesOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -176,4 +180,9 @@ void AHero::PickupDropDown() {
 
 		bIsHoldingObject = false;
 	}
+}
+
+void  AHero::IncrementCollectedBlocks()
+{
+	++CollectedBlocks;
 }

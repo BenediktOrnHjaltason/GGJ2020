@@ -156,6 +156,8 @@ void AHero::PiecesOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 
 void AHero::PickupDropDown() {
 
+	UE_LOG(LogTemp, Warning, TEXT("PickupDropDown Called"))
+
 	if (!bIsHoldingObject)
 		PieceGrabber->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
 
@@ -164,7 +166,12 @@ void AHero::PickupDropDown() {
 		HoldingMeshes[PieceHoldingNow]->SetHiddenInGame(true);
 		HoldingMeshes[PieceHoldingNow]->SetVisibility(false);
 
-		SpawnPiece(PieceHoldingNow);
+		if (!bPutBlockInTower)
+			SpawnPiece(PieceHoldingNow);
+
+		else bPutBlockInTower = false;
+
+
 		PieceHoldingNow = 6;
 
 		bIsHoldingObject = false;

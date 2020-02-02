@@ -50,26 +50,28 @@ public:
 
 	//--Holding Pieces
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* MeshHolding0;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* MeshHolding1;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* MeshHolding2;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* MeshHolding3;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* MeshHolding4;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* MeshHolding5;
 
 	TArray<UStaticMeshComponent*> HoldingMeshes;
 
+	//Is set when Hero gets reference to this!
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class AHero* HeroRef;
 
 	FRotator HeroExitRotation;

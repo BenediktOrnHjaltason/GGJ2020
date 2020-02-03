@@ -4,6 +4,7 @@
 #include "Hero.h"
 #include "TowerPawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "Block.h"
 #include "EngineUtils.h"
 
 // Sets default values
@@ -48,6 +49,7 @@ void AHero::BeginPlay()
 	GetTowerPawnRef();
 
 	PieceGrabber->OnComponentBeginOverlap.AddDynamic(this, &AHero::PiecesOverlap);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AHero::BlocksOverlap);
 
 	HoldingMeshes.Push(MeshHolding0);
 	HoldingMeshes.Push(MeshHolding1);
@@ -58,6 +60,8 @@ void AHero::BeginPlay()
 
 	PieceGrabber->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
 	PieceGrabber->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Ignore);
+
+
 
 }
 
@@ -134,8 +138,6 @@ void AHero::SpawnPiece(int index) {
 	else if (index == 4) GetWorld()->SpawnActor<APieceBase>(Piece4Spawn, SpawnLocation, GetActorRotation());
 	else if (index == 5) GetWorld()->SpawnActor<APieceBase>(Piece5Spawn, SpawnLocation, GetActorRotation());
 
-
-	//UGameplayStatics::PlaySound2D(GetWorld(), CraftingSound);
 }
 
 void AHero::PiecesOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -184,5 +186,11 @@ void AHero::PickupDropDown() {
 
 void  AHero::IncrementCollectedBlocks()
 {
-	++CollectedBlocks;
+	
+}
+
+void AHero::BlocksOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+
+	if(OtherActor->IsA(ABlock::StaticClass())) ++CollectedBlocks;
 }

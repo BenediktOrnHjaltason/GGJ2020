@@ -50,6 +50,7 @@ ATowerPawn::ATowerPawn()
 	MeshHolding5 = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshHold5"));
 	MeshHolding5->SetupAttachment(HeroMesh);
 
+
 }
 
 // Called when the game starts or when spawned
@@ -72,6 +73,8 @@ void ATowerPawn::BeginPlay()
 void ATowerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	DeltaTimeSample = DeltaTime;
 
 	sineInput += DeltaTime * 5;
 	HeroMesh->SetRelativeLocation(FVector(
@@ -100,7 +103,11 @@ void ATowerPawn::Tick(float DeltaTime)
 				HoldingMeshes[HeroRef->PieceHoldingNow]->SetVisibility(false);
 			}
 		}
+
+		TurnOffExhaust();
 	}
+
+	JetpackExhaust((WSValue == 1 || ADValue == 1) ? 1: 0);
 }
 
 // Called to bind functionality to input
@@ -114,8 +121,9 @@ void ATowerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void ATowerPawn::MoveUpDown(float AxisValue)
 {
+	WSValue = UKismetMathLibrary::Abs(AxisValue);
 
-	float UpdateZ = {SpringArm->GetRelativeLocation().Z + AxisValue * 15};
+	float UpdateZ = {SpringArm->GetRelativeLocation().Z + AxisValue * UpDownMultiplier};
 
 	SpringArm->SetRelativeLocation(FVector(SpringArm->GetRelativeLocation().X, SpringArm->GetRelativeLocation().Y, UpdateZ));
 
@@ -125,7 +133,8 @@ void ATowerPawn::MoveUpDown(float AxisValue)
 
 void ATowerPawn::RotateAroundTower(float AxisValue)
 {
-	SpringArm->SetRelativeRotation(SpringArm->GetRelativeRotation() + FRotator(0, -AxisValue * 3, 0));
+	ADValue = UKismetMathLibrary::Abs(AxisValue);
+	SpringArm->SetRelativeRotation(SpringArm->GetRelativeRotation() + FRotator(0, -AxisValue * RotateMultiplier * DeltaTimeSample, 0));
 }
 
 void ATowerPawn::HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -147,5 +156,7 @@ void ATowerPawn::HeroEnters(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 		HoldingMeshes[HeroRef->PieceHoldingNow]->SetHiddenInGame(false);
 		HoldingMeshes[HeroRef->PieceHoldingNow]->SetVisibility(true);
 	}
+
+	TurnOnExhaust();
 
 }

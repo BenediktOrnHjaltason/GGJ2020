@@ -37,9 +37,9 @@ void ABlock::Tick(float DeltaTime)
 void ABlock::PickUpOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	
-	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Mesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	Destroy();
 
-	HeroRef->IncrementCollectedBlocks();
-	this->Destroy();
+	UGameplayStatics::PlaySound2D(GetWorld(), PickupSound);
 }
 

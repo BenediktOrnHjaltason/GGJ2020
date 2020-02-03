@@ -27,7 +27,7 @@ public:
 		UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int CollectedBlocks{ 16 };
+		int CollectedBlocks{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int PieceIndexToSpawn{ 0 };
@@ -60,7 +60,9 @@ public:
 		void PiecesOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-
+	UFUNCTION()
+		void BlocksOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	TArray<UStaticMeshComponent*> HoldingMeshes;
 

@@ -11,6 +11,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
 #include "Components/SceneComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 #include "TowerPawn.generated.h"
@@ -68,6 +69,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMeshComponent* MeshHolding5;
 
+
 	TArray<UStaticMeshComponent*> HoldingMeshes;
 
 	//Is set when Hero gets reference to this!
@@ -87,7 +89,35 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float fUpperLimit;
 
+	float DeltaTimeSample{ 0 };
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float RotateMultiplier;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float UpDownMultiplier;
+
+
+
 	//-----/
+
+	//Jetpack thrust
+
+	float WSValue{ 0 };
+	float ADValue{ 0 };
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void JetpackExhaust(float multiplier);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void TurnOnExhaust();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void TurnOffExhaust();
+
+
+	//-/
+	
 
 	//------Overlap
 

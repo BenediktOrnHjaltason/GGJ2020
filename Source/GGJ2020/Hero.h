@@ -73,6 +73,7 @@ public:
 	void ForwardBackward(float AxisValue);
 	void MoveRightLeft(float AxisValue);
 	void RotatePlayer(float AxisValue);
+	void RotateCamera(float AxisValue);
 
 
 
